@@ -41,3 +41,22 @@ export async function confirmLogin(email, password) {
 
   return res.data.confirmLogin;
 }
+
+export async function getUserData(email, token) {
+  console.log(token);
+  const res = await client
+    .query({
+      query: gql`
+      query getUserData {
+        getUserData(email: "${email}", token: "${token}") {
+          validToken
+          email
+          userId
+        }
+      }
+      `,
+    })
+    .catch((e) => console.log(e));
+
+  return res.data.getUserData;
+}

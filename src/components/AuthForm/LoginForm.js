@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { NavLink, Redirect } from "react-router-dom";
 import { confirmLogin } from "../../utils/GraphQLUtils";
+import Cookies from "universal-cookie";
 
 function LoginForm(props) {
   const [state, setState] = useState({
     email: "",
     password: "",
+    token: "",
     isAuthenticated: false,
   });
 
@@ -20,25 +22,26 @@ function LoginForm(props) {
   const handleSubmitClick = async (e) => {
     e.preventDefault();
 
-    const { authenticated } = await confirmLogin(
+    const { authenticated, token } = await confirmLogin(
       state.email,
       state.password
     );
+    console.log({ authenticated, token });
 
-    setState({ ...state, isAuthenticated: authenticated });
+    if (authenticated) {
+      setState({ ...state, isAuthenticated: true, token });
+    } else {
+      setState({ ...state, isAuthenticated: false });
+    }
   };
 
   if (state.isAuthenticated) {
-      console.log("state.email");
-      console.log(state.email);
-    return (
-      <Redirect
-        to={{
-          pathname: "/",
-          state: { isAuthenticated: true, username: state.email },
-        }}
-      />
-    );
+    const cookies = new Cookies();
+    cookies.set("isAuthenticated", true, { path: "/" });
+    cookies.set("email", state.email, { path: "/" });
+    cookies.set("token", state.token, { path: "/" });
+
+    return <Redirect to="/" />;
   } else {
     return (
       <div className="card col-12 col-lg-4 login-card mt-2 hv-center">

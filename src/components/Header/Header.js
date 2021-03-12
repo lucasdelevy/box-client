@@ -1,10 +1,28 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import Cookies from "universal-cookie";
 
 function Header() {
-  const location = useLocation();
+  const [state, setState] = useState({
+    isAuthenticated: false,
+    readCookies: false,
+  });
 
-  if (location.state && location.state.isAuthenticated) {
+  const cookies = new Cookies();
+  if (!state.readCookies) {
+    setState({
+      isAuthenticated: cookies.get("isAuthenticated") === "true",
+      readCookies: true,
+    });
+  }
+
+  const doLogout = () => {
+    cookies.set("email", "");
+    cookies.set("isAuthenticated", "false");
+    cookies.set("token", "");
+    setState({ isAuthenticated: false });
+  };
+
+  if (state.isAuthenticated) {
     return (
       <div>
         <nav className="navbar navbar-dark bg-primary">
@@ -13,7 +31,11 @@ function Header() {
             <a style={{ color: "white" }} href="/">
               Home
             </a>
-            <a style={{ color: "white", paddingLeft: "20px" }} href="/logout">
+            <a
+              style={{ color: "white", paddingLeft: "20px" }}
+              onClick={doLogout}
+              href=""
+            >
               Logout
             </a>
           </div>
