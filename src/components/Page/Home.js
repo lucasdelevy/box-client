@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { getUserData } from "../../utils/GraphQLUtils";
+import Header from "../Header/Header";
 
 function Home(props) {
   const [state, setState] = useState({
@@ -27,8 +28,13 @@ function Home(props) {
     } else {
       return (
         <div>
-          {state.userId} - {" "}
-          {state.email.substring(0, state.email.lastIndexOf("@"))}
+          <Header />
+          <div className="container d-flex align-items-center flex-column">
+            <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
+              {state.userId} -{" "}
+              {state.email.substring(0, state.email.lastIndexOf("@"))}
+            </div>
+          </div>
         </div>
       );
     }

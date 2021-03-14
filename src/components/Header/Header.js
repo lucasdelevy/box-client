@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "universal-cookie";
+import Button from "@material-ui/core/Button";
 
 function Header() {
   const [state, setState] = useState({
@@ -20,6 +21,7 @@ function Header() {
     cookies.set("isAuthenticated", "false");
     cookies.set("token", "");
     setState({ isAuthenticated: false });
+    window.location.reload(false);
   };
 
   if (state.isAuthenticated) {
@@ -27,17 +29,12 @@ function Header() {
       <div>
         <nav className="navbar navbar-dark bg-primary">
           <div className="row col-12 d-flex justify-content-center text-white">
-            {/* <span className="h3">Sign-in</span> */}
-            <a style={{ color: "white" }} href="/">
+            <Button color="primary" variant="contained" href="/">
               Home
-            </a>
-            <a
-              style={{ color: "white", paddingLeft: "20px" }}
-              onClick={doLogout}
-              href=""
-            >
+            </Button>
+            <Button color="primary" variant="contained" onClick={doLogout}>
               Logout
-            </a>
+            </Button>
           </div>
         </nav>
       </div>
@@ -47,13 +44,12 @@ function Header() {
       <div>
         <nav className="navbar navbar-dark bg-primary">
           <div className="row col-12 d-flex justify-content-center text-white">
-            {/* <span className="h3">Sign-in</span> */}
-            <a style={{ color: "white" }} href="/">
+            <Button color="primary" variant="contained" href="/">
               Home
-            </a>
-            <a style={{ color: "white", paddingLeft: "20px" }} href="/login">
+            </Button>
+            <Button color="primary" variant="contained" href="/login">
               Login
-            </a>
+            </Button>
           </div>
         </nav>
       </div>

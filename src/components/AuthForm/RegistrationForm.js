@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { saveLogin } from "../../utils/GraphQLUtils";
+import Header from "../Header/Header";
+import Button from "@material-ui/core/Button";
 
 function RegistrationForm(props) {
   const [state, setState] = useState({
@@ -36,53 +38,66 @@ function RegistrationForm(props) {
   };
 
   return (
-    <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
-      <form>
-        <div className="form-group text-left">
-          <label htmlFor="exampleInputEmail1">Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-            value={state.email}
-            onChange={handleChange}
-          />
-          <small id="emailHelp" className="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small>
+    <div>
+      <Header />
+      <div className="container d-flex align-items-center flex-column">
+        <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
+          <form>
+            <div className="form-group text-left">
+              <input
+                style={{ marginTop: "10px" }}
+                type="email"
+                className="form-control"
+                id="email"
+                aria-describedby="emailHelp"
+                placeholder="e-mail"
+                value={state.email}
+                onChange={handleChange}
+              />
+              <small id="emailHelp" className="form-text text-muted">
+                We'll never share your email with anyone else.
+              </small>
+            </div>
+            <div className="form-group text-left">
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                placeholder="password"
+                value={state.password}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group text-left">
+              <input
+                type="password"
+                className="form-control"
+                id="confirmPassword"
+                placeholder="confirm Password"
+                value={state.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+            <div
+              style={{
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "10px"
+              }}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                onClick={handleSubmitClick}
+              >
+                Sign up
+              </Button>
+            </div>
+          </form>
         </div>
-        <div className="form-group text-left">
-          <label htmlFor="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            placeholder="Password"
-            value={state.password}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group text-left">
-          <label htmlFor="exampleInputPassword1">Confirm Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            value={state.confirmPassword}
-            onChange={handleChange}
-          />
-        </div>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={handleSubmitClick}
-        >
-          Sign up
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
