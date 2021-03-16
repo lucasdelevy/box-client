@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { gql } from "@apollo/client";
-const passwordHash = require("password-hash");
 
 const client = new ApolloClient({
   uri: "https://nice-box.herokuapp.com/graphql",
@@ -8,21 +7,20 @@ const client = new ApolloClient({
 });
 
 export async function saveLogin(email, password) {
-  const hash = passwordHash.generate(password);
-
-  console.log(hash);
-
-  client
+  const res = await client
     .mutate({
       mutation: gql`
       mutation saveLogin {
-        saveLogin(email: "${email}", hash: "${hash}") {
+        saveLogin(email: "${email}", password: "${password}") {
           couldSave
+          token
         }
       }
     `,
     })
-    .then((result) => console.log(result));
+    .catch((e) => console.log(`saveLogin failed: ${e}`));
+
+  return res.data.saveLogin;
 }
 
 export async function confirmLogin(email, password) {
@@ -37,13 +35,12 @@ export async function confirmLogin(email, password) {
       }
       `,
     })
-    .catch((e) => console.log(e));
+    .catch((e) => console.log(`confirmLogin failed: ${e}`));
 
   return res.data.confirmLogin;
 }
 
 export async function getUserData(email, token) {
-  console.log(token);
   const res = await client
     .query({
       query: gql`
@@ -56,7 +53,23 @@ export async function getUserData(email, token) {
       }
       `,
     })
-    .catch((e) => console.log(e));
+    .catch((e) => console.log(`getUserData failed: ${e}`));
 
   return res.data.getUserData;
+}
+
+export async function listFiles(email, token, path) {
+  const res = await client
+    .query({
+      query: gql`
+      query listFiles {
+        listFiles(email: "${email}", token: "${token}", path: "${path}") {
+          files
+        }
+      }
+    `,
+    })
+    .catch((e) => console.log(`fetchFileList failed: ${e}`));
+
+  return res.data.listFiles;
 }

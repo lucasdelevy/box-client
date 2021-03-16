@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { saveLogin } from "../../utils/GraphQLUtils";
 import Header from "../Header/Header";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 function RegistrationForm(props) {
   const [state, setState] = useState({
@@ -18,7 +20,9 @@ function RegistrationForm(props) {
     }));
   };
 
-  const handleSubmitClick = (e) => {
+  const history = useHistory();
+
+  const handleSubmitClick = async (e) => {
     e.preventDefault();
 
     console.log(state.password);
@@ -26,15 +30,24 @@ function RegistrationForm(props) {
 
     if (state.password === state.confirmPassword) {
       console.log("Sending information to server...");
-      sendDetailsToServer(state.email, state.password);
+      await signUpAndLogIn(state.email, state.password);
     } else {
       console.log("Error: different passwords");
       // props.showError('Passwords should be the same!')
     }
   };
 
-  const sendDetailsToServer = (email, password) => {
-    saveLogin(email, password);
+  const signUpAndLogIn = async (email, password) => {
+    const res = await saveLogin(email, password);
+
+    if (res.couldSave) {
+      const cookies = new Cookies();
+      cookies.set("isAuthenticated", true, { path: "/" });
+      cookies.set("email", email, { path: "/" });
+      cookies.set("token", res.token, { path: "/" });
+
+      history.push("/");
+    }
   };
 
   return (
